@@ -18,7 +18,7 @@ production
 cloud 
       into a baby step.
       </p>},
-  image_url: 'ridocker.jpeg',
+  image_url: 'ridocker.jpg',
   price: 38.00)
 # . . .
 Product.create!(title: 'Build Chatbot Interactions',
@@ -35,7 +35,7 @@ Product.create!(title: 'Build Chatbot Interactions',
       can participate. Exercise your creativity by creating chatbot 
       skills for communicating, information, and fun.
       </p>},
-  image_url: 'dpchat.jpeg',
+  image_url: 'dpchat.jpg',
   price: 20.00)
 # . . .
 
@@ -58,5 +58,5 @@ concurrency
 better, 
       and is a breeze to deploy.
       </p>},
-  image_url: 'crystal.jpeg',
+  image_url: 'crystal.jpg',
   price: 40.00)
