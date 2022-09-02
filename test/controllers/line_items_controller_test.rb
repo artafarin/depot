@@ -1,62 +1,47 @@
-require "test_helper"
+#---
+# Excerpted from "Agile Web Development with Rails 6",
+# published by The Pragmatic Bookshelf.
+# Copyrights apply to this code. It may not be used to create training material,
+# courses, books, articles, and the like. Contact us if you are in doubt.
+# We make no guarantees that this code is fit for any purpose.
+# Visit http://www.pragmaticprogrammer.com/titles/rails6 for more book information.
+#---
+require "application_system_test_case"
 
-class LineItemsControllerTest < ActionDispatch::IntegrationTest
+class OrdersTest < ApplicationSystemTestCase
   setup do
-    @line_item = line_items(:one)
+    @order = orders(:one)
   end
 
-  test "should get index" do
-    get line_items_url
-    assert_response :success
+  test "visiting the index" do
+    visit orders_url
+    assert_selector "h1", text: "Orders"
   end
 
-  test "should get new" do
-    get new_line_item_url
-    assert_response :success
-  end
-
-  test "should create line_item" do
-    assert_difference('LineItem.count') do
-      post line_items_url, params: {  product_id: products(:ruby).id }
+  test "destroying a Order" do
+    visit orders_url
+    page.accept_confirm do
+      click_on "Destroy", match: :first
     end
 
-    follow_redirect!
-
-    assert_select 'h2', 'Your Cart'
-    assert_select 'td', "Programming Ruby 1.9"    
-
+    assert_text "Order was successfully destroyed"
   end
+  test "check routing number" do
+    visit store_index_url
 
+    click_on 'Add to Cart', match: :first
 
-  test "should create line_item via ajax" do
-    assert_difference('LineItem.count') do
-      post line_items_url, params: { product_id: products(:ruby).id },
-        xhr: true
-    end
+    click_on 'Checkout'
 
-    assert_response :success
-    assert_match /<tr class=\\"line-item-highlight/, @response.body
-  end
-  test "should show line_item" do
-    get line_item_url(@line_item)
-    assert_response :success
-  end
+    fill_in 'order_name', with: 'Dave Thomas'
+    fill_in 'order_address', with: '123 Main Street'
+    fill_in 'order_email', with: 'dave@example.com'
 
-  test "should get edit" do
-    get edit_line_item_url(@line_item)
-    assert_response :success
-  end
+    assert_no_selector "#order_routing_number"
 
-  test "should update line_item" do
-    patch line_item_url(@line_item), params: { line_item: { product_id: @line_item.product_id } }
-    assert_redirected_to line_item_url(@line_item)
-  end
+    select 'Check', from: 'Pay type'
 
-  test "should destroy line_item" do
-    assert_difference('LineItem.count', -1) do
-      delete line_item_url(@line_item)
-    end
-
-    assert_redirected_to line_items_url
-  end
+    assert_selector "#order_routing_number"
+  end 
 end
+
