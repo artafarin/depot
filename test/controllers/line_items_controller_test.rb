@@ -6,42 +6,66 @@
 # We make no guarantees that this code is fit for any purpose.
 # Visit http://www.pragmaticprogrammer.com/titles/rails6 for more book information.
 #---
-require "application_system_test_case"
+require 'test_helper'
 
-class OrdersTest < ApplicationSystemTestCase
+class LineItemsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @order = orders(:one)
+    @line_item = line_items(:one)
   end
 
-  test "visiting the index" do
-    visit orders_url
-    assert_selector "h1", text: "Orders"
+  test "should get index" do
+    get line_items_url
+    assert_response :success
   end
 
-  test "destroying a Order" do
-    visit orders_url
-    page.accept_confirm do
-      click_on "Destroy", match: :first
+  test "should get new" do
+    get new_line_item_url
+    assert_response :success
+  end
+
+  test "should create line_item" do
+    assert_difference('LineItem.count') do
+      post line_items_url, params: { product_id: products(:ruby).id }
     end
 
-    assert_text "Order was successfully destroyed"
+    follow_redirect!
+
+    assert_select 'h2', 'Your Cart'
+    assert_select 'td', "Programming Ruby 1.9"
   end
-  test "check routing number" do
-    visit store_index_url
 
-    click_on 'Add to Cart', match: :first
+  test "should show line_item" do
+    get line_item_url(@line_item)
+    assert_response :success
+  end
 
-    click_on 'Checkout'
+  test "should get edit" do
+    get edit_line_item_url(@line_item)
+    assert_response :success
+  end
 
-    fill_in 'order_name', with: 'Dave Thomas'
-    fill_in 'order_address', with: '123 Main Street'
-    fill_in 'order_email', with: 'dave@example.com'
+  test "should update line_item" do
+    patch line_item_url(@line_item),
+      params: { line_item: { product_id: @line_item.product_id } }
+    assert_redirected_to line_item_url(@line_item)
+  end
 
-    assert_no_selector "#order_routing_number"
+  test "should destroy line_item" do
+    assert_difference('LineItem.count', -1) do
+      delete line_item_url(@line_item)
+    end
 
-    select 'Check', from: 'Pay type'
+    assert_redirected_to line_items_url
+  end
 
-    assert_selector "#order_routing_number"
-  end 
+  test "should create line_item via ajax" do
+    assert_difference('LineItem.count') do
+      post line_items_url, params: { product_id: products(:ruby).id },
+        xhr: true
+    end 
+
+    assert_response :success
+    assert_match /<tr class=\\"line-item-highlight/, @response.body
+  end
 end
 
